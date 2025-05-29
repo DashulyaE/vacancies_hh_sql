@@ -1,5 +1,5 @@
 import requests
-import  os
+import os
 from dotenv import load_dotenv
 
 
@@ -9,7 +9,6 @@ class HeadHunterAPI:
     def __init__(self):
         self.url = "https://api.hh.ru/"
 
-
     def _connect_employer(self, employer_id: str):
         """Метод подключения к API для получения данных о компании"""
 
@@ -17,15 +16,13 @@ class HeadHunterAPI:
         response_check = self._connect_check(response)
         return response_check
 
-
     def _connect_vacancy(self, employer_id: str):
         """Метод подключения к API для получения данных о вакансиях компании"""
 
-        params = {'employer_id': employer_id}
-        response = requests.get(f'{self.url}/vacancies', params=params)
+        params = {"employer_id": employer_id}
+        response = requests.get(f"{self.url}/vacancies", params=params)
         response_check = self._connect_check(response)
         return response_check
-
 
     def _connect_check(self, response):
         """Метод проверки запроса к API"""
@@ -39,7 +36,6 @@ class HeadHunterAPI:
         except Exception as e:
             print(f"Возникла ошибка при обращении к API , {e}")
 
-
     def get_employer(self, employer_list_id):
         """Метод получения списка компаний по id"""
 
@@ -52,7 +48,6 @@ class HeadHunterAPI:
                 if employer_list == []:
                     print("Компании не найдены")
         return employer_list
-
 
     def get_vacancies(self, employer_list_id):
         """Метод получения списка вакансий по id компании"""
@@ -70,8 +65,8 @@ class HeadHunterAPI:
 
 if __name__ == "__main__":
     load_dotenv()
-    employers_id = os.getenv('employer_list_id')
-    employers_lst_id = employers_id.split(',')
+    employers_id = os.getenv("employer_list_id")
+    employers_lst_id = employers_id.split(",")
     employers_obj = HeadHunterAPI()
     employers_lst = employers_obj.get_employer(employers_lst_id)
     vacancies_list = employers_obj.get_vacancies(employers_lst_id)
