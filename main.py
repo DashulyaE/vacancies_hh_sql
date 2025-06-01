@@ -1,7 +1,7 @@
 from config import config
 import  re
 
-from src.db_connect import create_database
+from src.db_connect import create_database, create_table
 
 
 def main():
@@ -14,6 +14,7 @@ def main():
         db_name = input("Введите имя создаваемой базы данных: ")
         if reg.match(db_name):
             create_database(db_name, params)
+            create_table(db_name, params)
             break
         else:
             print("Имя базы должно быть на английском языке")
