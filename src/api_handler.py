@@ -58,8 +58,6 @@ class HeadHunterAPI:
             if response:
                 vacancies = response.json().get("items", [])
                 vacancies_list.append(vacancies)
-                if vacancies_list == [[]]:
-                    print(f"Вакансии не найдены для компании {employer}")
         return vacancies_list
 
 
@@ -70,5 +68,11 @@ if __name__ == "__main__":
     employers_obj = HeadHunterAPI()
     employers_lst = employers_obj.get_employer(employers_lst_id)
     vacancies_list = employers_obj.get_vacancies(employers_lst_id)
-    print(employers_lst)
     print(vacancies_list)
+    for vacancies in vacancies_list:
+        if vacancies != []:
+            for vacancy in vacancies:
+                info = vacancy.get('id', 0), vacancy.get('name', 0),vacancy.get('alternate_url', 0),vacancy.get('employer', 0).get('name'),vacancy.get('employer', 0).get('id')
+                print(info)
+        else:
+            print("jfdhs")
