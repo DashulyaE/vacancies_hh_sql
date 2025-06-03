@@ -1,6 +1,4 @@
 import requests
-import os
-from dotenv import load_dotenv
 
 
 class HeadHunterAPI:
@@ -59,26 +57,3 @@ class HeadHunterAPI:
                 vacancies = response.json().get("items", [])
                 vacancies_list.append(vacancies)
         return vacancies_list
-
-
-if __name__ == "__main__":
-    load_dotenv()
-    employers_id = os.getenv("employer_list_id")
-    employers_lst_id = employers_id.split(",")
-    employers_obj = HeadHunterAPI()
-    employers_lst = employers_obj.get_employer(employers_lst_id)
-    vacancies_list = employers_obj.get_vacancies(employers_lst_id)
-    print(vacancies_list)
-    for vacancies in vacancies_list:
-        if vacancies != []:
-            for vacancy in vacancies:
-                # info = (
-                #     vacancy.get("id", 0),
-                #     vacancy.get("name", 0),
-                #     vacancy.get("alternate_url", 0),
-                #     vacancy.get("employer", 0).get("name"),
-                #     vacancy.get("employer", 0).get("id"),
-                # )
-                print(vacancy)
-        else:
-            print("jfdhs")
