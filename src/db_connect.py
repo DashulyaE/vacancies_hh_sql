@@ -44,6 +44,7 @@ def create_table(db_name: str, params: dict):
                     vacancy_id VARCHAR(25) PRIMARY KEY,
                     name VARCHAR(255),
                     url VARCHAR(255),
+                    salary INTEGER,
                     employers_name VARCHAR(255),
                     employers_id VARCHAR(25),
                     CONSTRAINT fk_employers FOREIGN KEY (employers_id) REFERENCES employers(employers_id))
@@ -92,6 +93,23 @@ def load_vacancies(db_name: str, params: dict, vac_list: List[dict]):
             for vacancies in vac_list:
                 if vacancies != []:
                     for vacancy in vacancies:
+
+                        if vacancy.get("salary") is not None:
+                            salary_from = vacancy["salary"].get("from", 0)
+                            salary_to = vacancy["salary"].get("to", 0)
+                            salary_from = salary_from if salary_from is not None else 0
+                            salary_to = salary_from if salary_to is not None else 0
+                        else:
+                            salary_from = 0
+                            salary_to = 0
+
+                        if salary_from == 0:
+                            salary = salary_to
+                        elif salary_to == 0:
+                            salary = salary_from
+                        else:
+                            salary = (salary_from + salary_to) / 2
+
                         vacancy_id = vacancy.get("id", 0)
                         name = vacancy.get("name", 0)
                         url = vacancy.get("alternate_url", 0)
@@ -100,10 +118,10 @@ def load_vacancies(db_name: str, params: dict, vac_list: List[dict]):
 
                         cur.execute(
                             """
-                            INSERT INTO vacancies (vacancy_id, name, url, employers_name, employers_id)
-                                VALUES (%s, %s, %s, %s, %s)
+                            INSERT INTO vacancies (vacancy_id, name, url, salary, employers_name, employers_id)
+                                VALUES (%s, %s, %s, %s, %s, %s)
                             """,
-                            (vacancy_id, name, url, employers_name, employers_id),
+                            (vacancy_id, name, url, salary, employers_name, employers_id),
                         )
 
     except psycopg2.Error as e:

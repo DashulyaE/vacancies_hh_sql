@@ -72,13 +72,13 @@ if __name__ == "__main__":
     for vacancies in vacancies_list:
         if vacancies != []:
             for vacancy in vacancies:
-                info = (
-                    vacancy.get("id", 0),
-                    vacancy.get("name", 0),
-                    vacancy.get("alternate_url", 0),
-                    vacancy.get("employer", 0).get("name"),
-                    vacancy.get("employer", 0).get("id"),
-                )
-                print(info)
+                # info = (
+                #     vacancy.get("id", 0),
+                #     vacancy.get("name", 0),
+                #     vacancy.get("alternate_url", 0),
+                #     vacancy.get("employer", 0).get("name"),
+                #     vacancy.get("employer", 0).get("id"),
+                # )
+                print(vacancy)
         else:
             print("jfdhs")
