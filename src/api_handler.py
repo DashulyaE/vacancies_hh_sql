@@ -1,7 +1,28 @@
+from typing import Any
+
 import requests
+from abc import ABC, abstractmethod
 
 
-class HeadHunterAPI:
+class BaseApi(ABC):
+    """Абстрактный класс для работы с API"""
+
+    @abstractmethod
+    def _connect_employer(self, employer_id: str):
+        """Абстрактный метод подключения к API для получения данных о компании"""
+        pass
+
+    @abstractmethod
+    def _connect_vacancy(self, employer_id: str):
+        """Абстрактный метод подключения к API для получения данных о вакансиях компании"""
+        pass
+
+    def _connect_check(self):
+        """Абстрактный метод проверки запроса к API"""
+        pass
+
+
+class HeadHunterAPI(BaseApi):
     """Класс для работы с вакансиями через API Head Hunter"""
 
     def __init__(self):
@@ -34,7 +55,7 @@ class HeadHunterAPI:
         except Exception as e:
             print(f"Возникла ошибка при обращении к API , {e}")
 
-    def get_employer(self, employer_list_id):
+    def get_employer(self, employer_list_id: list):
         """Метод получения списка компаний по id"""
 
         employer_list = []
@@ -47,7 +68,7 @@ class HeadHunterAPI:
                     print("Компании не найдены")
         return employer_list
 
-    def get_vacancies(self, employer_list_id):
+    def get_vacancies(self, employer_list_id: list):
         """Метод получения списка вакансий по id компании"""
 
         vacancies_list = []
