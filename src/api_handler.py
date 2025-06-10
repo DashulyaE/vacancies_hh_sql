@@ -1,14 +1,32 @@
+from typing import Any
+
 import requests
-import  os
-from dotenv import load_dotenv
+from abc import ABC, abstractmethod
 
 
-class HeadHunterAPI:
+class BaseApi(ABC):
+    """Абстрактный класс для работы с API"""
+
+    @abstractmethod
+    def _connect_employer(self, employer_id: str):
+        """Абстрактный метод подключения к API для получения данных о компании"""
+        pass
+
+    @abstractmethod
+    def _connect_vacancy(self, employer_id: str):
+        """Абстрактный метод подключения к API для получения данных о вакансиях компании"""
+        pass
+
+    def _connect_check(self):
+        """Абстрактный метод проверки запроса к API"""
+        pass
+
+
+class HeadHunterAPI(BaseApi):
     """Класс для работы с вакансиями через API Head Hunter"""
 
     def __init__(self):
         self.url = "https://api.hh.ru/"
-
 
     def _connect_employer(self, employer_id: str):
         """Метод подключения к API для получения данных о компании"""
@@ -17,15 +35,13 @@ class HeadHunterAPI:
         response_check = self._connect_check(response)
         return response_check
 
-
     def _connect_vacancy(self, employer_id: str):
         """Метод подключения к API для получения данных о вакансиях компании"""
 
-        params = {'employer_id': employer_id}
-        response = requests.get(f'{self.url}/vacancies', params=params)
+        params = {"employer_id": employer_id}
+        response = requests.get(f"{self.url}/vacancies", params=params)
         response_check = self._connect_check(response)
         return response_check
-
 
     def _connect_check(self, response):
         """Метод проверки запроса к API"""
@@ -39,8 +55,7 @@ class HeadHunterAPI:
         except Exception as e:
             print(f"Возникла ошибка при обращении к API , {e}")
 
-
-    def get_employer(self, employer_list_id):
+    def get_employer(self, employer_list_id: list):
         """Метод получения списка компаний по id"""
 
         employer_list = []
@@ -53,8 +68,7 @@ class HeadHunterAPI:
                     print("Компании не найдены")
         return employer_list
 
-
-    def get_vacancies(self, employer_list_id):
+    def get_vacancies(self, employer_list_id: list):
         """Метод получения списка вакансий по id компании"""
 
         vacancies_list = []
@@ -63,17 +77,4 @@ class HeadHunterAPI:
             if response:
                 vacancies = response.json().get("items", [])
                 vacancies_list.append(vacancies)
-                if vacancies_list == [[]]:
-                    print(f"Вакансии не найдены для компании {employer}")
         return vacancies_list
-
-
-if __name__ == "__main__":
-    load_dotenv()
-    employers_id = os.getenv('employer_list_id')
-    employers_lst_id = employers_id.split(',')
-    employers_obj = HeadHunterAPI()
-    employers_lst = employers_obj.get_employer(employers_lst_id)
-    vacancies_list = employers_obj.get_vacancies(employers_lst_id)
-    print(employers_lst)
-    print(vacancies_list)
